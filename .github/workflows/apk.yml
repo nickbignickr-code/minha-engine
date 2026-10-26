@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: apk
+  cancel-in-progress: true
+
 jobs:
   apk:
     runs-on: ubuntu-22.04
@@ -47,7 +51,8 @@ jobs:
         working-directory: app
         run: |
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-          yes | buildozer -v android debug 2>&1 | tee build.log | tail -n 400
+          buildozer -v android debug > build.log 2>&1 || (tail -n 300 build.log; exit 1)
+          tail -n 60 build.log
           ls -la bin
 
       - name: Log do build (se der erro)
@@ -56,6 +61,20 @@ jobs:
         with:
           name: log-do-build
           path: app/build.log
+
+      - name: Guardar o fim do log no ramo "logs" (para dar para ler e consertar)
+        if: failure()
+        run: |
+          mkdir -p /tmp/logs
+          (tail -n 4000 app/build.log 2>/dev/null || echo "sem build.log") > /tmp/logs/build_tail.log
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git checkout --orphan logs-tmp
+          git rm -rf --cached . > /dev/null
+          cp /tmp/logs/build_tail.log build_tail.log
+          git add build_tail.log
+          git commit -m "log do build ${{ github.run_number }}"
+          git push -f origin HEAD:logs
 
       - name: Renomear
         run: cp app/bin/*.apk MinhaEngine.apk
