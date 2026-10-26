@@ -117,3 +117,12 @@ NOVO NA VERSÃO 17: FUNCIONA NO CELULAR (ANDROID)
     - Configurações > Aparência > Tamanho da interface: "Celular" (botões maiores) ou
       "Celular nítido" (letras mais finas, tudo menor).
   NO PC nada muda. Tem tela touch no PC? Configurações > Geral > "Controles de toque também no PC".
+
+APP DE CELULAR (APK)
+  - O jeito mais fácil: instale o MinhaEngine.apk (sem Pydroid). Ele fica na página do projeto no
+    GitHub, em "Releases". O Android pede para "permitir instalar apps desta fonte": pode permitir.
+  - Na primeira vez o app pede "acesso a todos os arquivos". Permitindo, seus projetos ficam na pasta
+    MinhaEngine do celular (fácil de achar e copiar pelo cabo USB). Sem permitir, ficam na pasta do app
+    (Android/data/com.minhaengine.minhaengine/files/MinhaEngine).
+  - Para levar seus jogos do PC: copie a pasta "projetos" para dentro da pasta MinhaEngine do celular.
+  - Atualizar o app não apaga seus projetos. Se o app fechar sozinho, o erro fica em erro_do_app.txt.
