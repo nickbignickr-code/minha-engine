@@ -15,11 +15,12 @@ android.presplash_color = #181A22
 android.permissions = INTERNET,ACCESS_NETWORK_STATE,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE,MANAGE_EXTERNAL_STORAGE,VIBRATE
 android.api = 33
 android.minapi = 24
-android.archs = arm64-v8a, armeabi-v7a
+android.archs = arm64-v8a
 android.accept_sdk_license = True
 android.allow_backup = True
 p4a.bootstrap = sdl2
-p4a.branch = master
+p4a.branch = v2023.02.10
+android.ndk = 25b
 
 [buildozer]
 log_level = 2
