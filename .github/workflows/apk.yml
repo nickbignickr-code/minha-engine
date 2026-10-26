@@ -1,0 +1,75 @@
+name: Montar APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Colocar a engine dentro do app (engine.zip)
+        run: |
+          rm -rf /tmp/engine app/engine.zip
+          mkdir -p /tmp/engine
+          cp -r minha_engine.py motor LEIA-ME.txt servidor_supabase.sql /tmp/engine/
+          cp icone.png icone.ico /tmp/engine/ 2>/dev/null || true
+          echo "${GITHUB_SHA}" > /tmp/engine/VERSAO_APK.txt
+          (cd /tmp/engine && zip -r "$GITHUB_WORKSPACE/app/engine.zip" . -x "*__pycache__*")
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar ferramentas
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev \
+            libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev automake
+          pip install --upgrade pip
+          pip install "buildozer==1.5.0" "cython<3.0" setuptools
+
+      - name: Guardar o Android SDK entre builds
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.buildozer
+            app/.buildozer
+          key: buildozer-${{ hashFiles('app/buildozer.spec') }}
+
+      - name: Montar o APK
+        working-directory: app
+        run: |
+          export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+          yes | buildozer -v android debug 2>&1 | tee build.log | tail -n 400
+          ls -la bin
+
+      - name: Log do build (se der erro)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: log-do-build
+          path: app/build.log
+
+      - name: Renomear
+        run: cp app/bin/*.apk MinhaEngine.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MinhaEngine-apk
+          path: MinhaEngine.apk
+
+      - name: Publicar (link para baixar no celular)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-${{ github.run_number }}
+          name: Minha Engine (APK ${{ github.run_number }})
+          body: "Baixe o MinhaEngine.apk no celular e instale. (Permita instalar apps desta fonte.)"
+          files: MinhaEngine.apk
+          make_latest: true

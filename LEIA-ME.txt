@@ -1,0 +1,119 @@
+MINHA ENGINE (versão 17, dividida em partes)
+============================================
+
+COMO RODAR
+  1) pip install pygame
+  2) python minha_engine.py      (ou dois cliques nele)
+
+  A pasta "motor" PRECISA ficar do lado do minha_engine.py:
+
+      Minha Engine/
+          minha_engine.py      <- você roda este
+          motor/               <- as partes da engine
+          projetos/            <- suas criações (é criada sozinha)
+          config.json, plugins/ ...
+          usuarios/            <- as contas (cada uma com a sua carteira)
+          publicados/          <- jogos publicados (neste PC)
+          cache_online/        <- jogos do mundo que você baixou
+          servidor_supabase.sql <- código do servidor (cole no Supabase)
+          loja_comunidade/     <- itens à venda (.mepack)
+
+  Se você já tinha a engine: coloque estes arquivos NA MESMA PASTA de antes
+  (substituindo o minha_engine.py). Seus projetos e configurações continuam lá.
+
+O QUE TEM EM CADA ARQUIVO (pasta motor/)
+  configuracoes.py      tamanhos da tela, pastas, cores e fontes
+  objetos.py            tipos de objeto, comportamentos, catálogo de eventos/ações
+  api_docs.py           textos de ajuda das funções (aba API)
+  linguagem_brasa.py    a linguagem Brasa (lê e roda os scripts)
+  auxiliares.py         funções de ajuda e o config.json (atalhos, controles, aparência)
+  projetos.py           pastas dos projetos e miniaturas
+  midia.py              imagens, fontes, sons e música
+  desenho_objetos.py    como cada objeto é desenhado (materiais, formas, texto)
+  interface.py          botões, balões de aviso, dicas, guia Primeiros passos, logo
+  sistemas.py           grade de colisão, controle (gamepad), plugins
+  celular.py            CELULAR/toque: dedos viram clique, rolagem, pinça, controles na tela, teclado do celular
+  carteira.py           usuários, Brasas (moeda virtual), planos Grátis/Game Maker/Dev, recibos
+  publicados.py         área de Jogos publicados: visitas e likes
+  online.py             conta online, jogos e Loja para o mundo todo (Supabase)
+  jogo_objetos.py       os objetos dentro do jogo rodando
+  jogo_funcoes.py       funções prontas da linguagem (escrever, criar, achar...)
+  jogo_scripts.py       scripts, eventos visuais e comportamentos rodando
+  jogo_tela.py          o desenho do jogo na tela (luz, UI, diálogos)
+  logica_extra.py       comportamentos, ações, condições e QUANDOs extras (com categorias)
+  topdown.py            modo TOP-DOWN: 8 direções, animação por direção, espada, sombras, ordem por altura
+  jogo.py               o jogo: começo, física e update
+  editor_dados.py       cores do código, dicas dos botões, lista de atalhos
+  editor_pixel.py       aba Desenho (pixel art e animação)
+  loja.py               aba Loja (Creator Store)
+  loja_catalogo.py      +700 itens da Loja (100 grátis, 300 Brasas, 100 Game Maker, 200 Dev) e o "Você prefere"
+  loja_personagens.py   28 personagens (plataforma, top-down e NPC), cenário/inimigos/kits top-down, exemplo RPG
+  editor_base.py        editor: seleção, desfazer, salvar, fases, play, Saída
+  editor_objetos.py     editor: mexer nos objetos, variantes, copiar/colar
+  editor_eventos.py     editor: aba Eventos
+  editor_script.py      editor: aba Script e aba API
+  editor_entrada.py     editor: teclado e mouse
+  editor_tela.py        editor: desenho dos painéis e da cena
+  editor_seletor.py     editor: janela de escolher QUANDO/SE/FAÇA/comportamento (busca e rolagem)
+  editor.py             editor: começo e loop principal
+  inicio.py             tela Início (criações, novo projeto, configurações)
+  principal.py          o programa principal
+
+COMO AS PARTES SE JUNTAM
+  O minha_engine.py lê as partes na ordem da lista PARTES_DA_ENGINE e junta
+  tudo como se fosse um arquivo só. Por isso não precisa de "import" entre elas.
+  Se der erro, a mensagem mostra o nome do arquivo e a linha certa.
+  Ao exportar um jogo, as partes viram um arquivo único (motor.py).
+
+NOVO NA VERSÃO 15
+  - Ação "Criar botão na tela" (e "Criar texto na tela" / "Apagar botões do grupo"): ao clicar,
+    a variável global botao_clicado vira o nome do botão e (se quiser) chama uma função.
+  - Loja > Interface > "Você prefere (escolha de poder)" por 50 Brasas: janela com título e
+    3 botões (1 Dois pulos, 2 Mais vida, 3 Mais dano). O jogo para até escolher.
+  - Player tem a propriedade "dano": pisar no inimigo e os tiros do player tiram esse tanto.
+  - +700 itens na Loja: imagens coloridas, blocos e gemas (grátis); 100 inimigos de 10 elementos,
+    60 plataformas, 60 poções de poder, 40 efeitos e 40 scripts (Brasas); 50 chefões, 30 torres,
+    20 interfaces (Game Maker); 100 fases prontas, 50 pets e 50 upgrades do Player (Dev).
+  - Filtros novos na Loja: Grátis, Game Maker, Dev, Chefões, Torres, Plataformas, Pets...
+
+NOVO NA VERSÃO 16: MODO TOP-DOWN E MAIS PERSONAGENS
+  - Botão "Modo: Plataforma / Top-down" lá em cima: troca a fase para visão de cima (estilo Zelda/Pokémon).
+    No top-down: setas/WASD andam nas 8 direções, ESPAÇO ou J dá golpe de espada, F atira e Shift dá dash
+    para onde o player olha. Quem está mais embaixo aparece na frente e os personagens têm sombra.
+  - Player, NPC e Inimigo têm animação por direção: anim_baixo, anim_cima e anim_lado
+    (na aba Desenho tem os botões "= ↓", "= ↑" e "= ↔").
+  - Comportamentos novos: Vagar (anda à toa), Manter distância, Quebrável (espada), Chão lento.
+    Ações: Atacar com a espada, Atirar para onde olha, Virar para a direção, Ligar/desligar top-down.
+    Condições: Olhando para, Modo top-down ligado. QUANDO: Ao atacar com a espada, Ao levar espadada.
+  - 28 personagens novos em pixel art (Aventureiro, Cavaleiro, Ninja, Mago, Princesa, Pirata, Astronauta,
+    Robô, Zumbi, Esqueleto, Viking, Vampiro, Rei, Samurai, Bruxa, Alien...). Cada um vem como
+    Personagem (plataforma), Top-down (4 direções) e NPC que conversa.
+  - Loja > Top-down: chãos, muros, água rasa, lama, lago, arbustos e vasos que quebram, baú, escada,
+    inimigos top-down (e arqueiro), salas de masmorra, vilas e clareiras prontas.
+  - Projetos novos: "Projeto vazio (top-down)" e "Exemplo: RPG top-down (vila e masmorra)".
+
+NOVO NA VERSÃO 17: FUNCIONA NO CELULAR (ANDROID)
+  COMO INSTALAR NO CELULAR
+    1) Instale o app "Pydroid 3" (Play Store).
+    2) No Pydroid: menu (☰) > Pip > digite pygame > Install. Se ele pedir, instale também o
+       "Pydroid repository plugin" que ele indica.
+    3) Passe a pasta da engine para o celular (o arquivo MinhaEngine_celular.zip pelo cabo USB,
+       Google Drive ou WhatsApp para você mesmo) e extraia numa pasta, por exemplo Download/MinhaEngine.
+       Quer levar seus jogos? Copie também a pasta "projetos".
+    4) No Pydroid: abrir (pasta) > minha_engine.py > botão ▶ amarelo.
+  COMO USAR COM O DEDO
+    - Tocar = clicar.  Segurar parado = botão direito (menu do objeto).
+    - Arrastar para cima/baixo nas listas = rolar. Na cena e no Desenho, arrastar = arrastar mesmo.
+    - Dois dedos na cena: arrastar move a câmera e a pinça dá zoom.
+    - Barra no canto da cena: Teclado, Apagar, Duplicar, Copiar, Colar, Vários (selecionar vários), Tudo, Fechar.
+    - O teclado do celular abre sozinho quando precisa escrever (nome, busca, script...).
+    - Botão voltar do Android = Esc.
+  JOGANDO NO CELULAR
+    - Joystick na esquerda (aparece onde você encostar o dedo) e botões na direita: PULAR, ESPADA,
+      TIRO, DASH e FALAR aparecem só quando o seu jogo usa. Teclas que os seus scripts usam
+      (ex: quando tecla "g") viram botão também. II pausa. Dá para usar vários dedos ao mesmo tempo.
+  TELA
+    - Abre deitado e em tela cheia, no formato da tela do celular (sem faixa preta).
+    - Configurações > Aparência > Tamanho da interface: "Celular" (botões maiores) ou
+      "Celular nítido" (letras mais finas, tudo menor).
+  NO PC nada muda. Tem tela touch no PC? Configurações > Geral > "Controles de toque também no PC".

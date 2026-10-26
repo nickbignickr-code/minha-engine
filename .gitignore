@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+projetos/
+usuarios/
+publicados/
+cache_online/
+loja_comunidade/
+config.json
+sessao_online.json
+online_erros.txt
+projeto_autosave.json
+app/.buildozer/
+app/bin/
+app/engine.zip
