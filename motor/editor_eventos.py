@@ -184,7 +184,8 @@ class EditorEventos:
         pygame.draw.rect(t, (24, 26, 32), area)
         t.set_clip(area)
         self.hits_ev = []
-        y = area.y + 10 - self.ev_scroll
+        ev_vis = suave((id(self), "ev", id(self.alvo_logica())), self.ev_scroll)
+        y = area.y + 10 - ev_vis
         extra = f"   (vários selecionados: editando só '{self.sel['nome']}')" if len(self.selecao) > 1 else ""
         t.blit(self.f.render(f"EVENTOS de: {self.nome_alvo()}{extra}", True, C_TEXTO), (area.x + 12, y))
         t.blit(self.fp.render("QUANDO acontece algo  →  SE as condições forem verdade  →  FAÇA as ações.   "
@@ -287,13 +288,13 @@ class EditorEventos:
         self.botao_add(t, area.x + 12, y, "+ Nova função", ("add_func",), mouse)
         y += 40
 
-        self.ev_total = y + self.ev_scroll - area.y
+        self.ev_total = y + ev_vis - area.y
         self.ev_scroll = max(0, min(self.ev_scroll, max(0, self.ev_total - area.h + 20)))
         t.set_clip(None)
         if self.ev_total > area.h:
             trilho = pygame.Rect(area.right - 9, area.y + 6, 6, area.h - 12)
             pygame.draw.rect(t, (50, 54, 66), trilho, border_radius=3)
             alto = max(30, int(trilho.h * area.h / self.ev_total))
-            topo = trilho.y + int((trilho.h - alto) * self.ev_scroll / max(1, self.ev_total - area.h + 20))
+            topo = trilho.y + int((trilho.h - alto) * ev_vis / max(1, self.ev_total - area.h + 20))
             pygame.draw.rect(t, C_DESTAQUE, (trilho.x, topo, trilho.w, alto), border_radius=3)
             self.hits_ev.append((trilho.inflate(12, 0), ("ev_barra", trilho)))

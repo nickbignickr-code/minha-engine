@@ -299,11 +299,12 @@ class Inicio:
         alto = self.CARD_H + 20
         total = ((len(jogos) + colunas - 1) // colunas) * (alto + self.GAP)
         self.scroll_jogos = max(0, min(self.scroll_jogos, max(0, total - grade.h)))
+        vis_j = suave((id(self), "jogos"), self.scroll_jogos)
         t.set_clip(grade)
         for i, m in enumerate(jogos):
             col, lin = i % colunas, i // colunas
             r = pygame.Rect(xi + col * (self.CARD_W + self.GAP), grade.y + 6 + lin * (alto + self.GAP) -
-                            self.scroll_jogos, self.CARD_W, alto)
+                            vis_j, self.CARD_W, alto)
             if r.bottom < grade.y or r.y > grade.bottom:
                 continue
             self.desenhar_card_jogo(t, mouse, m, r, grade)
@@ -867,6 +868,13 @@ class Inicio:
             CONFIG["aparencia"]["destaque"] = acao[1]
             aplicar_aparencia()
             self.salvar_cfg()
+        elif k == "ap_tema":
+            CONFIG["aparencia"]["tema"] = acao[1]
+            aplicar_aparencia()
+            self.salvar_cfg()
+        elif k == "ap_anim":
+            CONFIG["aparencia"]["animacoes"] = acao[1] == "Ligado"
+            self.salvar_cfg()
         elif k == "ap_res":
             CONFIG["aparencia"]["resolucao"] = acao[1]
             self.salvar_cfg()
@@ -1090,10 +1098,11 @@ class Inicio:
         linhas = (len(vis) + colunas - 1) // colunas
         total = linhas * (self.CARD_H + self.GAP)
         self.scroll = max(0, min(self.scroll, max(0, total - grade.h)))
+        vis_p = suave((id(self), "projetos", self.pagina), self.scroll)
         t.set_clip(grade)
         for i, proj in enumerate(vis):
             col, lin = i % colunas, i // colunas
-            r = pygame.Rect(xi + col * (self.CARD_W + self.GAP), grade.y + 6 + lin * (self.CARD_H + self.GAP) - self.scroll,
+            r = pygame.Rect(xi + col * (self.CARD_W + self.GAP), grade.y + 6 + lin * (self.CARD_H + self.GAP) - vis_p,
                             self.CARD_W, self.CARD_H)
             if r.bottom < grade.y or r.y > grade.bottom:
                 continue
@@ -1193,7 +1202,8 @@ class Inicio:
             for c in combos:
                 uso.setdefault(c, []).append(acao)
         t.set_clip(lista)
-        y = lista.y + 12 - self.scroll_cfg
+        vis_c = suave((id(self), "cfg", self.config_aba), self.scroll_cfg)
+        y = lista.y + 12 - vis_c
         for acao in padrao:
             if lista.y - 40 < y < lista.bottom:
                 t.blit(texto_cache(nomes[acao], 15, C_TEXTO), (lista.x + 18, y + 7))
@@ -1218,7 +1228,7 @@ class Inicio:
                     self.botao(pygame.Rect(lista.right - 110, y + 2, 92, 30), "padrão", ("reset_um", cat, acao), mouse,
                                cor=(44, 48, 60), fonte_tam=12)
             y += 42
-        total = y + self.scroll_cfg - lista.y
+        total = y + vis_c - lista.y
         self.scroll_cfg = max(0, min(self.scroll_cfg, max(0, total - lista.h + 10)))
         t.set_clip(None)
         dica = ("Clique numa tecla para trocar, no + para adicionar outra. Vermelho = a mesma tecla em duas coisas."
@@ -1259,6 +1269,12 @@ class Inicio:
             self.hits.append((r, ("ap_destaque", nome)))
             xx += 52
         y += 88
+        t.blit(texto_cache("Tema (cores da engine)", 15, C_TEXTO2), (x, y))
+        self.chips(t, mouse, x, y + 24, list(TEMAS_UI), ap.get("tema", "Grafite"), "ap_tema")
+        t.blit(texto_cache("Movimento suave", 15, C_TEXTO2), (x + 560, y))
+        self.chips(t, mouse, x + 560, y + 24, ["Ligado", "Desligado"],
+                   "Ligado" if ap.get("animacoes", True) else "Desligado", "ap_anim")
+        y += 80
         t.blit(texto_cache("Tamanho da interface  (use o tamanho da sua tela para letras bem nítidas)", 15, C_TEXTO2),
                (x, y))
         self.chips(t, mouse, x, y + 24, RESOLUCOES, ap["resolucao"], "ap_res")

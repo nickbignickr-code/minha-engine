@@ -1,0 +1,36 @@
+name: Fotos da interface
+
+on:
+  push:
+    branches: [main]
+    paths: ["motor/**", "minha_engine.py", "ferramentas/**", ".github/workflows/fotos.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fotos:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Instalar pygame
+        run: pip install pygame
+      - name: Tirar as fotos (pygame de verdade, sem janela)
+        run: python ferramentas/fotos_da_interface.py 2>&1 | tee fotos_log.txt || true
+      - name: Guardar as fotos no ramo "fotos"
+        run: |
+          mkdir -p /tmp/f && cp -r fotos/. /tmp/f/ 2>/dev/null || true
+          cp fotos_log.txt /tmp/f/log.txt
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git checkout --orphan fotos-tmp
+          git rm -rf --cached . > /dev/null
+          rm -rf ./* .github ferramentas app 2>/dev/null || true
+          cp -r /tmp/f/. .
+          git add -A
+          git commit -m "fotos ${{ github.sha }}"
+          git push -f origin HEAD:fotos

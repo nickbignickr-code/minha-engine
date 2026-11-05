@@ -3,7 +3,7 @@
 # Este arquivo é uma PARTE da engine: não rode ele sozinho, rode o minha_engine.py.
 
 class Editor(EditorBase, EditorObjetos, EditorEventos, EditorScript, EditorEntrada, EditorTela, EditorSeletor,
-             EditorToque):
+             EditorToque, EditorAjuda):
     """O editor. Os métodos estão divididos nos arquivos editor_*.py (veja a lista em cima)."""
     MENU_POR_COLUNA = 20
     MENU_LARG = 200
@@ -144,9 +144,9 @@ class Editor(EditorBase, EditorObjetos, EditorEventos, EditorScript, EditorEntra
 
         self.botoes = {}
         x = 8
-        for nome, w in [("inicio", 58), ("play", 82), ("playcheio", 100), ("novo", 50), ("salvar", 60),
-                        ("desfazer", 70), ("refazer", 64), ("mover", 96), ("girar", 84), ("snap", 66), ("grade", 62),
-                        ("modo", 112), ("saida", 62), ("exportar", 74), ("ajuda", 64)]:
+        for nome, w in [("inicio", 72), ("play", 90), ("playcheio", 96), ("novo", 62), ("salvar", 76),
+                        ("desfazer", 34), ("refazer", 34), ("mover", 96), ("girar", 84), ("snap", 34), ("grade", 34),
+                        ("buscar", 92), ("modo", 116), ("saida", 70), ("exportar", 90), ("ajuda", 34)]:
             self.botoes[nome] = pygame.Rect(x, 8, w, 30)
             x += w + 5
 
@@ -205,6 +205,8 @@ class Editor(EditorBase, EditorObjetos, EditorEventos, EditorScript, EditorEntra
 
     # ----------------- loop principal -----------------
     def rodar(self):
+        if not CONFIG["geral"].get("tour_visto") and not self.jogo:
+            self.iniciar_tour()          # primeira vez: mostra onde fica cada coisa
         while self.rodando:
             dt = min(self.relogio.tick(60) / 1000.0, 1 / 30)
             self.tempo += dt

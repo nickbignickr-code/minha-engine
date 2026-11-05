@@ -201,8 +201,12 @@ class EditorObjetos:
             self.play(cheio=True)
         elif nome == "telacheia":
             self.alternar_tela()
+        elif nome == "buscar":
+            self.abrir_busca()
         elif nome == "ajuda":
-            opcoes = {f"Atalhos do teclado ({atalho_de('ajuda')})": lambda: setattr(self, "mostrar_ajuda", True),
+            opcoes = {"Tour guiado (1 minuto)": self.iniciar_tour,
+                      "Buscar qualquer coisa (Ctrl+K)": self.abrir_busca,
+                      f"Atalhos do teclado ({atalho_de('ajuda')})": lambda: setattr(self, "mostrar_ajuda", True),
                       "Primeiros passos (guia)": self.reabrir_passos,
                       "Tudo da engine (aba API)": lambda: setattr(self, "aba", "api"),
                       "Coisas prontas (aba Loja)": lambda: setattr(self, "aba", "loja"),

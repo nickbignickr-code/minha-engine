@@ -82,6 +82,8 @@ DICAS_BOTOES = {
     "desfazer": "Desfaz a última mudança (Ctrl+Z)",
     "refazer": "Refaz o que foi desfeito (Ctrl+Y)",
     "grade": "Mostra ou esconde a grade",
+    "buscar": "Buscar qualquer coisa (Ctrl+K): comandos, objetos para colocar, objetos da fase e itens da Loja",
+    "ajuda": "Ajuda: tour guiado, atalhos do teclado e primeiros passos",
     "modo": "Troca a fase entre PLATAFORMA (gravidade e pulo) e TOP-DOWN (visão de cima, 8 direções, espada)",
     "mover": "De quantos em quantos studs (pixels) os objetos andam quando você arrasta ou usa as setas",
     "girar": "Quantos graus a seleção gira com R (Shift+R gira ao contrário)",
@@ -89,7 +91,6 @@ DICAS_BOTOES = {
     "snap": "Prender os objetos na grade (G)",
     "telacheia": "Liga/desliga tela cheia (F11)",
     "exportar": "Exportar o jogo, ou criar atalhos com ícone na área de trabalho",
-    "ajuda": "Todos os atalhos (mude eles em Início > Configurações)",
     "inicio": "Volta para a tela Início (suas criações e configurações)",
 }
 

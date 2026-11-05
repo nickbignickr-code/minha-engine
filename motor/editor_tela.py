@@ -13,6 +13,13 @@ class EditorTela:
             TOQUE.desenhar_pad(t)
             pygame.display.flip()
             return
+        aba_vista = "jogo" if self.jogo else self.aba
+        if aba_vista != getattr(self, "aba_desenhada", aba_vista) and animacoes_ligadas():
+            try:        # guarda a tela antiga para trocar de aba com um "dissolver"
+                self.troca_aba = (t.subsurface(VIEW).copy(), agora_ui())
+            except (pygame.error, ValueError, AttributeError):
+                self.troca_aba = None
+        self.aba_desenhada = aba_vista
         t.fill(C_FUNDO_UI)
         if self.jogo:
             self.jogo.desenhar(t, self.f, self.fg)
@@ -28,6 +35,21 @@ class EditorTela:
             self.loja.desenhar(t, mouse)
         else:
             self.desenhar_cena(t, mouse)
+        troca = getattr(self, "troca_aba", None)
+        if troca:
+            k = entrada(troca[1], 0.18)
+            if k >= 1:
+                self.troca_aba = None
+            else:
+                try:
+                    troca[0].set_alpha(int(255 * (1 - k)))
+                    t.blit(troca[0], VIEW.topleft)
+                except (pygame.error, AttributeError):
+                    self.troca_aba = None
+        if self.jogo and agora_ui() - getattr(self, "play_t0", 0) < 0.35:
+            sombra = pygame.Surface(VIEW.size, pygame.SRCALPHA)
+            sombra.fill((0, 0, 0, int(255 * (1 - entrada(self.play_t0, 0.35)))))
+            t.blit(sombra, VIEW.topleft)
         pygame.draw.rect(t, C_DESTAQUE if self.jogo else C_BORDA, VIEW, 2 if self.jogo else 1)
         self.desenhar_abas(t, mouse)
         self.desenhar_topo(t, mouse)
@@ -51,6 +73,7 @@ class EditorTela:
             self.desenhar_ajuda(t)
         if self.prompt:
             self.desenhar_prompt(t, mouse)
+        self.desenhar_tour(t, mouse)
         pygame.display.flip()
 
     def desenhar_dica(self, t, mouse):
@@ -85,6 +108,12 @@ class EditorTela:
                 if chave in ("#cativo", "#cdel") and r.collidepoint(mouse):
                     nome_c = idx.get("t", "")
                     alvo, txt = ("c", nome_c), DESC_COMPORTAMENTOS.get(nome_c)
+        if alvo is None and mouse[0] >= LARGURA - PAINEL_DIR and not self.editando:
+            for r, chave, idx in self.hits_insp:
+                if isinstance(chave, str) and not chave.startswith("#") and chave in DESC_PROPS \
+                        and r.collidepoint(mouse):
+                    alvo, txt = ("p", chave), f"{ROTULOS.get(chave, chave)}: {DESC_PROPS[chave]}"
+                    break
         if alvo is None and self.botao_fase.collidepoint(mouse):
             alvo, txt = ("fase",), "Trocar de fase, criar, renomear, duplicar ou apagar fases"
         if alvo != self.hover[0]:
@@ -159,7 +188,9 @@ class EditorTela:
             cor = C_PAINEL if ativo else (C_BOTAO if r.collidepoint(mouse) else (38, 40, 47))
             pygame.draw.rect(t, cor, r, border_top_left_radius=6, border_top_right_radius=6)
             if ativo:
-                pygame.draw.line(t, C_DESTAQUE, (r.x + 4, r.y + 1), (r.right - 4, r.y + 1), 2)
+                xi = suave(("aba_ind", "x"), r.x + 4, 20)
+                wi = suave(("aba_ind", "w"), r.w - 8, 20)
+                pygame.draw.rect(t, C_DESTAQUE, (xi, r.y, wi, 3), border_radius=2)
             rot = nomes[nome]
             if contagem.get(nome):
                 rot += f" ({contagem[nome]})"
@@ -306,18 +337,25 @@ class EditorTela:
         pygame.draw.line(t, C_BORDA, (0, TOPO - 1), (LARGURA, TOPO - 1))
         textos = {
             "inicio": "Início",
-            "play": "Parar (Esc)" if self.jogo else f"Play ({atalho_de('play')})",
-            "playcheio": f"Play cheio ({atalho_de('play_cheio')})", "novo": "Novo",
+            "play": "Parar" if self.jogo else "Play",
+            "playcheio": "Play cheio", "novo": "Novo",
             "salvar": "Salvar" + (" *" if self.sujo else ""),
-            "abrir": "Abrir", "desfazer": "Desfazer", "refazer": "Refazer",
-            "grade": "Grade: " + ("Sim" if self.mostrar_grade else "Não"),
-            "snap": "Snap: " + ("Sim" if self.snap else "Não"),
+            "abrir": "Abrir", "desfazer": "", "refazer": "", "ajuda": "", "buscar": "Buscar",
+            "grade": "", "snap": "",
             "mover": f"Mover: {self.grade} ▾", "girar": f"Girar: {round(self.passo_giro) or 1}° ▾",
             "saida": "Saída" + (f" ({self.saida_erros_novos})" if getattr(self, "saida_erros_novos", 0) else ""),
             "telacheia": "Sair tela cheia" if self.tela_cheia else f"Tela cheia ({atalho_de('tela_cheia')})",
-            "exportar": "Exportar", "ajuda": f"Ajuda {atalho_de('ajuda')}",
-            "modo": "Modo: Top-down" if self.cena.get("visao_de_cima") else "Modo: Plataforma",
+            "exportar": "Exportar",
+            "modo": "Top-down" if self.cena.get("visao_de_cima") else "Plataforma",
         }
+        icones = {"inicio": "inicio", "play": "parar" if self.jogo else "play", "playcheio": "playcheio",
+                  "novo": "novo", "salvar": "salvar", "desfazer": "desfazer", "refazer": "refazer",
+                  "grade": "grade", "snap": "snap", "buscar": "buscar", "modo": "modo", "saida": "saida",
+                  "exportar": "exportar", "ajuda": "ajuda"}
+        # barra de cima com um degradê leve
+        for i in range(TOPO):
+            pygame.draw.line(t, clarear(C_PAINEL, int(10 * (1 - i / TOPO))), (0, i), (LARGURA, i))
+        pygame.draw.line(t, C_BORDA, (0, TOPO - 1), (LARGURA, TOPO - 1))
         for nome, r in self.botoes.items():
             cor = None
             if nome == "play":
@@ -335,8 +373,11 @@ class EditorTela:
                 cor = (70, 90, 140)
             elif nome == "modo":
                 cor = (150, 95, 40) if self.cena.get("visao_de_cima") else (60, 110, 160)
+            elif nome == "ajuda":
+                cor = clarear(C_DESTAQUE, -40)
+            ativo = (nome == "grade" and self.mostrar_grade) or (nome == "snap" and self.snap)
             fonte_ = self.fpp if nome in ("playcheio", "telacheia") else self.fp
-            desenhar_botao(t, fonte_, r, textos[nome], mouse, cor=cor)
+            desenhar_botao(t, fonte_, r, textos.get(nome, nome), mouse, ativo=ativo, cor=cor, icone=icones.get(nome))
         livre = LARGURA - 15 - (max(r.right for r in self.botoes.values()) + 12)
         nome_p = self.nome_projeto[:22]
         while nome_p and self.fb.size(nome_p)[0] > livre:
@@ -426,7 +467,8 @@ class EditorTela:
             self.hits_esq.append((r, ("ferr", "Borracha")))
             y += 34
             topo_lista = y
-            y -= self.scroll * 24
+            vis_esq = suave((id(self), "esq"), self.scroll * 24)
+            y -= vis_esq
             for grupo, tipos in GRUPOS_TIPOS:
                 fechada = grupo in self.cats_fechadas
                 cab = pygame.Rect(6, y, PAINEL_ESQ - 12, 20)
@@ -460,7 +502,7 @@ class EditorTela:
                                        "Clique no nome da categoria para fechar/abrir.", self.fpp, PAINEL_ESQ - 20):
                 t.blit(self.fpp.render(linha, True, C_TEXTO2), (10, y))
                 y += 14
-            total = y + self.scroll * 24 - topo_lista
+            total = y + vis_esq - topo_lista
             limite = max(0, (total - (area.bottom - topo_lista) + 24) // 24)
             self.scroll = max(0, min(self.scroll, limite))
         elif self.aba_esq == "modelos":
@@ -568,7 +610,8 @@ class EditorTela:
         varios = len(self.selecao) > 1
 
         alvo = self.alvo_logica()
-        y = area.y + 2 - self.insp_scroll
+        self.insp_vis = suave((id(self), "insp", id(self.sel)), self.insp_scroll)
+        y = area.y + 2 - self.insp_vis
         if varios:
             titulo = f"{len(self.selecao)} objetos selecionados"
             desc = "Mudar um campo aqui muda em TODOS os selecionados. Campos marcados com ≠ são diferentes."
@@ -765,13 +808,13 @@ class EditorTela:
                 self.hits_insp.append((r, "#addcomp", None))
             y += 34
 
-        self.insp_total = y + self.insp_scroll - area.y
+        self.insp_total = y + self.insp_vis - area.y
         self.insp_scroll = max(0, min(self.insp_scroll, max(0, self.insp_total - area.h + 10)))
         t.set_clip(None)
         if self.insp_total > area.h:
             frac = area.h / self.insp_total
             barra_h = max(30, int(area.h * frac))
-            pos = int((area.h - barra_h) * (self.insp_scroll / max(1, self.insp_total - area.h)))
+            pos = int((area.h - barra_h) * (self.insp_vis / max(1, self.insp_total - area.h)))
             pygame.draw.rect(t, C_BORDA, (LARGURA - 6, area.y + pos, 4, barra_h), border_radius=2)
 
     def desenhar_rodape(self, t, mouse):

@@ -593,7 +593,8 @@ class EditorScript:
                       or busca in i["exemplo"].lower())]
         lista = pygame.Rect(area.x, topo, area.w, area.bottom - topo)
         t.set_clip(lista)
-        y = topo + 4 - self.api_scroll
+        api_vis = suave((id(self), "api"), self.api_scroll)
+        y = topo + 4 - api_vis
         largura_txt = area.w - 140
         for item in itens:
             linhas_desc = quebrar_texto(item["desc"], self.fp, largura_txt)
@@ -622,7 +623,7 @@ class EditorScript:
             y += h + 6
         if not itens:
             t.blit(self.f.render("Nada encontrado.", True, C_TEXTO2), (area.x + 16, topo + 10))
-        self.api_total = y + self.api_scroll - topo
+        self.api_total = y + api_vis - topo
         self.api_scroll = max(0, min(self.api_scroll, max(0, self.api_total - lista.h + 20)))
         t.set_clip(None)
         rod = self.fpp.render(f"{len(itens)} resultado(s)  |  'Usar' cola o exemplo no script do objeto "

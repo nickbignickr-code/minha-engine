@@ -841,6 +841,7 @@ class EditorBase:
             self.alternar_tela()
             self.entrou_cheio = True
         self.jogo = Jogo(self.projeto, TELA_INTEIRA if cheio else VIEW)
+        self.play_t0 = agora_ui()
         self.saida_lidos_jogo = 0
         self.registrar("info", f"Play iniciado ({self.projeto['fase_atual']})")
         self.passos_feitos.add("play")

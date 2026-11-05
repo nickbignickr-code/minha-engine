@@ -782,9 +782,10 @@ class Loja:
         linhas = (len(itens) + colunas - 1) // colunas
         self.total = linhas * 128
         self.scroll = max(0, min(self.scroll, max(0, self.total - lista.h)))
+        vis = suave((id(self), "loja", self.cat), self.scroll)
         for i, item in enumerate(itens):
             cx = lista.x + (i % colunas) * (cw + 10)
-            cy = lista.y + (i // colunas) * 128 - self.scroll
+            cy = lista.y + (i // colunas) * 128 - vis
             if cy > lista.bottom or cy + 118 < lista.y:
                 continue
             self.desenhar_card(t, mouse, item, pygame.Rect(cx, cy, cw, 118), lista)

@@ -592,7 +592,13 @@ class JogoScripts:
             vars_ = getattr(getattr(o, "escopo", None), "vars", None)
             if vars_ and isinstance(vars_.get(nome), FuncaoBrasa):
                 return vars_[nome]()
-        raise ErroBrasa(f"A função '{nome}' não existe")
+        nomes = set(self.funcoes)
+        e_ = esc
+        while e_ is not None:
+            nomes.update(k for k, v in e_.vars.items() if isinstance(v, FuncaoBrasa))
+            e_ = e_.pai
+        s = sugestao_nome(nome, nomes)
+        raise ErroBrasa(f"A função '{nome}' não existe." + (f" Você quis dizer '{s}'?" if s else ""))
 
     def juntar_novos(self):
         voltas = 0

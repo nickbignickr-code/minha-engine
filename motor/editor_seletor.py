@@ -30,14 +30,25 @@ class EditorSeletor:
             cats.append(("Outros", resto))
         self.menu = None
         self.seletor = {"titulo": titulo, "tipo": tipo, "catalogo": catalogo, "cats": cats, "cat": "Tudo",
-                        "busca": "", "scroll": 0, "fn": ao_escolher, "cor": cor, "hits": [], "sobre": None}
+                        "busca": "", "scroll": 0, "fn": ao_escolher, "cor": cor, "hits": [], "sobre": None,
+                        "t0": agora_ui()}
 
     def itens_seletor(self):
         s = self.seletor
         itens = dict(s["cats"]).get(s["cat"], [])
         b = s["busca"].strip().lower()
         if b:
-            itens = [i for i in s["catalogo"] if b in i.lower() or b in descricao_do_item(s["tipo"], i).lower()]
+            palavras = b.split()
+            no_nome, na_desc = [], []
+            for i in s["catalogo"]:
+                nome_l = i.lower()
+                if all(p in nome_l for p in palavras):
+                    no_nome.append(i)
+                elif all(p in nome_l or p in descricao_do_item(s["tipo"], i).lower() for p in palavras):
+                    na_desc.append(i)
+            # primeiro o que começa com a busca, depois o que tem no nome, depois o que só tem na descrição
+            no_nome.sort(key=lambda i: (not i.lower().split(": ")[-1].startswith(b), len(i)))
+            itens = no_nome + na_desc
         return itens
 
     def rect_seletor(self):
@@ -50,12 +61,13 @@ class EditorSeletor:
         if not s:
             return
         s["hits"] = []
+        k = entrada(s.get("t0", 0), 0.18)
         sombra = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
-        sombra.fill((0, 0, 0, 150))
+        sombra.fill((0, 0, 0, int(150 * k)))
         t.blit(sombra, (0, 0))
-        caixa = self.rect_seletor()
-        pygame.draw.rect(t, (14, 15, 19), caixa.move(0, 5), border_radius=14)
-        pygame.draw.rect(t, (34, 37, 45), caixa, border_radius=14)
+        caixa = self.rect_seletor().move(0, int((1 - k) * 18))
+        sombra_painel(t, caixa, 14)
+        pygame.draw.rect(t, clarear(C_PAINEL, -6), caixa, border_radius=14)
         pygame.draw.rect(t, s["cor"], (caixa.x, caixa.y, caixa.w, 6), border_top_left_radius=14,
                          border_top_right_radius=14)
         t.blit(self.fg.render(s["titulo"], True, C_TEXTO), (caixa.x + 20, caixa.y + 16))
@@ -94,10 +106,11 @@ class EditorSeletor:
         lh = self.SEL_LINHA
         total = len(itens) * lh
         s["scroll"] = max(0, min(s["scroll"], max(0, total - lista.h + 8)))
+        vis = suave(("seletor", s["titulo"], s["cat"], s["busca"]), s["scroll"])
         t.set_clip(lista)
         s["sobre"] = None
         for i, nome in enumerate(itens):
-            r = pygame.Rect(lista.x + 6, lista.y + 4 + i * lh - s["scroll"], lista.w - 22, lh - 4)
+            r = pygame.Rect(lista.x + 6, lista.y + 4 + i * lh - vis, lista.w - 22, lh - 4)
             if r.bottom < lista.y or r.y > lista.bottom:
                 continue
             em_cima = r.collidepoint(mouse) and lista.collidepoint(mouse)
@@ -120,7 +133,7 @@ class EditorSeletor:
             trilho = pygame.Rect(lista.right - 10, lista.y + 6, 6, lista.h - 12)
             pygame.draw.rect(t, (50, 54, 66), trilho, border_radius=3)
             alto = max(30, int(trilho.h * lista.h / total))
-            topo = trilho.y + int((trilho.h - alto) * s["scroll"] / max(1, total - lista.h + 8))
+            topo = trilho.y + int((trilho.h - alto) * vis / max(1, total - lista.h + 8))
             pygame.draw.rect(t, s["cor"], (trilho.x, topo, trilho.w, alto), border_radius=3)
             s["hits"].append((trilho.inflate(10, 0), ("barra", trilho, total, lista.h)))
         if not itens:

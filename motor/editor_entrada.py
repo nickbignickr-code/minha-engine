@@ -5,6 +5,8 @@
 class EditorEntrada:
     # ----------------- eventos do pygame -----------------
     def evento(self, e):
+        if e.type != pygame.QUIT and self.evento_tour(e):
+            return
         if e.type == pygame.QUIT:
             if self.sujo:
                 self.autosave()
@@ -112,6 +114,10 @@ class EditorEntrada:
             return
         if evento_e(e, "tela_cheia"):
             self.alternar_tela()
+            return
+        if ctrl and e.key == pygame.K_k and not self.jogo:       # buscar qualquer coisa
+            self.confirmar_edicao()
+            self.abrir_busca()
             return
         if evento_e(e, "ajuda") and not self.editando:
             self.mostrar_ajuda = not self.mostrar_ajuda

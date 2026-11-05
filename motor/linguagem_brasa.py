@@ -343,6 +343,9 @@ def compilar(codigo):
             if v == "quando":
                 ev = p.esperar_nome()
                 if ev not in EVENTOS_SCRIPT:
+                    s_ = sugestao_nome(ev, EVENTOS_SCRIPT) if "sugestao_nome" in globals() else None
+                    if s_:
+                        raise ErroBrasa(f"Evento '{ev}' não existe. Você quis dizer '{s_}'?", n)
                     raise ErroBrasa(f"Evento '{ev}' não existe. Use: " + ", ".join(EVENTOS_SCRIPT), n)
                 arg = None
                 if not p.e_op(":"):

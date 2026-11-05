@@ -1,4 +1,4 @@
-MINHA ENGINE (versão 17, dividida em partes)
+MINHA ENGINE (versão 18, dividida em partes)
 ============================================
 
 COMO RODAR
@@ -32,6 +32,7 @@ O QUE TEM EM CADA ARQUIVO (pasta motor/)
   desenho_objetos.py    como cada objeto é desenhado (materiais, formas, texto)
   interface.py          botões, balões de aviso, dicas, guia Primeiros passos, logo
   sistemas.py           grade de colisão, controle (gamepad), plugins
+  polimento.py          temas, movimento suave, botões com brilho e ícones
   celular.py            CELULAR/toque: dedos viram clique, rolagem, pinça, controles na tela, teclado do celular
   carteira.py           usuários, Brasas (moeda virtual), planos Grátis/Game Maker/Dev, recibos
   publicados.py         área de Jogos publicados: visitas e likes
@@ -54,6 +55,7 @@ O QUE TEM EM CADA ARQUIVO (pasta motor/)
   editor_script.py      editor: aba Script e aba API
   editor_entrada.py     editor: teclado e mouse
   editor_tela.py        editor: desenho dos painéis e da cena
+  editor_ajuda.py       tour guiado, Buscar qualquer coisa (Ctrl+K), dicas das propriedades
   editor_seletor.py     editor: janela de escolher QUANDO/SE/FAÇA/comportamento (busca e rolagem)
   editor.py             editor: começo e loop principal
   inicio.py             tela Início (criações, novo projeto, configurações)
@@ -126,3 +128,16 @@ APP DE CELULAR (APK)
     (Android/data/com.minhaengine.minhaengine/files/MinhaEngine).
   - Para levar seus jogos do PC: copie a pasta "projetos" para dentro da pasta MinhaEngine do celular.
   - Atualizar o app não apaga seus projetos. Se o app fechar sozinho, o erro fica em erro_do_app.txt.
+
+NOVO NA VERSÃO 18: MAIS FLUIDA, MAIS BONITA E COM MAIS AJUDA
+  - Tour guiado: na primeira vez que abrir o editor ele mostra onde fica cada coisa (dá para ver de novo
+    no botão "?" lá em cima).
+  - Buscar qualquer coisa: botão Buscar ou Ctrl+K. Digite e ache comandos, abas, objetos para colocar,
+    objetos da fase, fases e os itens da Loja. Enter faz na hora.
+  - Passe o mouse no nome de uma propriedade (cor, pulo, gravidade...) e aparece o que ela faz.
+  - Erros de script mais espertos: "'pontso' não existe. Você quis dizer 'pontos'?"
+  - Movimento suave: listas rolam macio, abas trocam com um "dissolver", janelas aparecem deslizando,
+    o Play entra com um fade e os botões brilham de leve ao passar o mouse.
+  - Barra de cima com ícones (Play, Salvar, Desfazer, Refazer, Snap, Grade, Buscar, Modo, Exportar, Ajuda).
+  - Temas de cor: Grafite, Meia-noite, Carvão, Floresta e Vinho (Configurações > Aparência). Lá também dá
+    para desligar o movimento suave, se o computador for fraco.
