@@ -43,6 +43,11 @@ DESC_PROPS = {
     "pode_ser_pisado": "Sim = morre quando o player pula em cima.",
     "anim_baixo": "Animação andando para baixo (top-down).", "anim_cima": "Animação andando para cima (top-down).",
     "anim_lado": "Animação andando de lado (top-down).",
+    "ordenar_por_y": "Top-down: quem está mais embaixo na tela aparece na frente.",
+    "sombras": "Top-down: sombrinha embaixo dos personagens.", "visao_de_cima": "Jogo visto de cima (top-down), "
+    "sem gravidade.", "escuridao": "0 = claro, 255 = escuro total (use Luz e Tocha).",
+    "gravidade_cena": "Força que puxa tudo para baixo.", "olhar_a_frente": "A câmera mostra mais na direção que o "
+    "player anda.", "zoom_camera": "Aproxima (maior que 1) ou afasta (menor que 1) a câmera do jogo.",
 }
 
 

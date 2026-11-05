@@ -12,8 +12,8 @@ for _t in ("NPC", "Inimigo"):
     MODELOS[_t].update({"anim_baixo": "", "anim_cima": "", "anim_lado": ""})
 ROTULOS.update({"anim_baixo": "Anim. descendo (top-down)", "anim_cima": "Anim. subindo (top-down)",
                 "anim_lado": "Anim. de lado (top-down)", "espada": "Espada", "alcance_espada": "Alcance da espada",
-                "tecla_espada": "Tecla da espada", "ordenar_por_y": "De baixo fica na frente",
-                "sombras": "Sombras (top-down)"})
+                "tecla_espada": "Tecla da espada", "ordenar_por_y": "Ordem por altura",
+                "sombras": "Sombras"})
 _cena_antiga = cena_padrao
 
 
