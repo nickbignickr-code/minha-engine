@@ -213,7 +213,7 @@ class EditorBase:
         pygame.draw.rect(caixa, (30, 32, 40, 225), (0, 0, card.w, card.h), border_radius=14)
         t.blit(caixa, card.topleft)
         desenhar_simbolo(t, card.x + 20, card.y + 20, 36)
-        t.blit(self.fg.render("Sua fase ainda está vazia", True, C_TEXTO), (card.x + 68, card.y + 18))
+        t.blit(self.ft.render("Sua fase ainda está vazia", True, C_TEXTO), (card.x + 68, card.y + 18))
         t.blit(self.fpp.render("Como você quer começar?", True, C_TEXTO2), (card.x + 70, card.y + 48))
         opcoes = [("Colocar uma Peça", ("ferr", "Peça"), C_DESTAQUE), ("Fase pronta (kit)", ("kit",), C_VERDE),
                   ("Abrir a Loja", ("loja",), (130, 80, 170)), ("Abrir um exemplo", ("exemplo",), (70, 76, 92))]

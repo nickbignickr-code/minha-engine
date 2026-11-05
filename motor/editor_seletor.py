@@ -70,7 +70,7 @@ class EditorSeletor:
         pygame.draw.rect(t, clarear(C_PAINEL, -6), caixa, border_radius=14)
         pygame.draw.rect(t, s["cor"], (caixa.x, caixa.y, caixa.w, 6), border_top_left_radius=14,
                          border_top_right_radius=14)
-        t.blit(self.fg.render(s["titulo"], True, C_TEXTO), (caixa.x + 20, caixa.y + 16))
+        t.blit(self.ft.render(s["titulo"], True, C_TEXTO), (caixa.x + 20, caixa.y + 18))
         fechar = pygame.Rect(caixa.right - 40, caixa.y + 14, 26, 26)
         desenhar_botao(t, self.fp, fechar, "x", mouse, cor=(90, 50, 54))
         s["hits"].append((fechar, ("fechar",)))

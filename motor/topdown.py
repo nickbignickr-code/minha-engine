@@ -379,7 +379,7 @@ JogoExtras.comportamentos_extra = _comp_extra_td
 def exemplo_vazio_topdown():
     cena = cena_padrao()
     cena.update({"visao_de_cima": True, "fundo": [70, 130, 70], "olhar_a_frente": 0, "titulo": "Meu jogo top-down"})
-    objs = [nova_entidade("Peça", -400, -300, "Chao", w=1600, h=1200, material="Grama", cor=[90, 170, 90],
+    objs = [nova_entidade("Peça", -400, -300, "Chao", w=1600, h=1200, material="Gramado", cor=[90, 170, 90],
                           solido=False, camada=-10, contorno=0)]
     for i, (x, y, w, h) in enumerate([(-400, -300, 1600, 40), (-400, 860, 1600, 40), (-400, -300, 40, 1200),
                                       (1160, -300, 40, 1200)]):

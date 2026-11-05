@@ -139,7 +139,7 @@ class EditorTela:
         t.blit(sombra, (0, 0))
         pygame.draw.rect(t, C_PAINEL, caixa, border_radius=10)
         pygame.draw.rect(t, C_DESTAQUE, caixa, 2, border_radius=10)
-        t.blit(self.fg.render("Atalhos", True, C_TEXTO), (caixa.x + 20, caixa.y + 10))
+        t.blit(self.ft.render("Atalhos", True, C_TEXTO), (caixa.x + 20, caixa.y + 10))
         t.blit(self.fp.render(f"Clique em qualquer lugar ou aperte {atalho_de('ajuda')} para fechar.  "
                               "Mude os atalhos em Início > Configurações.", True, C_TEXTO2), (caixa.x + 190, caixa.y + 30))
         lista = lista_atalhos()

@@ -380,6 +380,8 @@ def flecha_modelo(com_nome=True):
 
 
 def chao_td(material, cor, w, h, nome="Chao"):
+    if material == "Grama":         # no top-down a grama é vista de cima
+        material = "Gramado"
     return nova_entidade("Peça", 0, 0, nome, w=w, h=h, material=material, cor=list(cor), solido=False,
                          gravidade=False, contorno=0, camada=-10)
 

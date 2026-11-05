@@ -79,6 +79,15 @@ for tema in me.TEMAS_UI:
     foto("09_tema_" + me._slug(tema) if hasattr(me, "_slug") else "09_tema_" + tema, ed.desenhar)
 me.CONFIG["aparencia"]["tema"] = "Grafite"
 me.aplicar_aparencia()
+pasta2 = me.criar_projeto("Vazio", "Projeto vazio (top-down)")
+me.definir_projeto(pasta2)
+ed2 = me.Editor(pasta_projeto=pasta2, tela=tela)
+foto("12_topdown_vazio", ed2.desenhar)
+ed2.objetos[:] = [d for d in ed2.objetos if d["tipo"] == "Peça"]
+foto("13_cena_vazia", ed2.desenhar)
+ed2.iniciar_tour()
+ed2.tour["passo"] = 3
+foto("14_tour_propriedades", ed2.desenhar, 20)
 ini = me.Inicio(tela, pg.time.Clock())
 foto("10_inicio", ini.desenhar)
 ini.pagina = "config"

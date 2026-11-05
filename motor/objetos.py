@@ -56,7 +56,7 @@ GRUPOS_TIPOS = [
     ("INTERFACE (UI)", ["Texto", "Botao", "Barra", "Painel", "Imagem"]),
 ]
 MATERIAIS = ["Plástico", "Madeira", "Tijolo", "Pedra", "Metal", "Grama", "Areia", "Gelo", "Neon", "Vidro",
-             "Borracha", "Tecido"]
+             "Borracha", "Tecido", "Gramado"]
 DESC_MATERIAIS = {"Gelo": "escorrega", "Areia": "deixa lento", "Borracha": "quica", "Neon": "brilha",
                   "Vidro": "transparente"}
 FORMAS = ["Retângulo", "Círculo", "Triângulo", "Losango", "Rampa ◢", "Rampa ◣"]

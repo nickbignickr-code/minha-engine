@@ -155,7 +155,7 @@ class EditorAjuda:
                          border_top_right_radius=14)
         n = len(PASSOS_TOUR)
         t.blit(self.fpp.render(f"{tour['passo'] + 1} de {n}", True, C_TEXTO2), (card.x + 18, card.y + 16))
-        t.blit(self.fg.render(titulo, True, C_TEXTO), (card.x + 18, card.y + 34))
+        t.blit(self.ft.render(titulo, True, C_TEXTO), (card.x + 18, card.y + 36))
         for i, linha in enumerate(linhas):
             t.blit(self.fp.render(linha, True, C_TEXTO), (card.x + 18, card.y + 70 + i * 19))
         # bolinhas de progresso

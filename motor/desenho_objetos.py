@@ -78,6 +78,14 @@ def superficie_material(w, h, cor, material):
         pygame.draw.rect(surf, (88, 190, 80), (0, 0, w, topo))
         for x in range(0, w, 5):
             pygame.draw.line(surf, (70, 160, 64), (x, topo), (x + 2, topo + 3), 2)
+    elif material == "Gramado":      # grama vista de cima (chão do top-down)
+        for _ in range(max(8, w * h // 70)):
+            x, y = rnd.randrange(w), rnd.randrange(h)
+            c = clarear(cor, rnd.choice((-22, -14, 16, 24)))
+            pygame.draw.line(surf, c, (x, y), (x + rnd.choice((-1, 0, 1)), y - rnd.randint(2, 4)), 1)
+        for _ in range(max(1, w * h // 6000)):
+            x, y = rnd.randrange(w), rnd.randrange(h)
+            pygame.draw.circle(surf, clarear(cor, -18), (x, y), rnd.randint(3, 6))
     elif material == "Areia":
         for _ in range(max(6, w * h // 40)):
             surf.set_at((rnd.randrange(w), rnd.randrange(h)), escuro)
@@ -104,6 +112,23 @@ def desenhar_peca(tela, d, r, cor):
     contorno = int(num_seguro(d.get("contorno", 2), 2))
     cor_c = cor_ok(d.get("cor_contorno")) if d.get("cor_contorno") else clarear(cor, -50)
     w, h = max(1, r.w), max(1, r.h)
+    if forma == "Retângulo" and w * h > 160000 and material not in ("Vidro", "Neon", "Metal", "Grama") \
+            and not int(num_seguro(d.get("arredondado", 0), 0)):
+        # chão grande (top-down): desenha em ladrilhos, rápido mesmo dando zoom
+        lad = superficie_material(128, 128, cor, material)
+        visivel = r.clip(tela.get_clip() or tela.get_rect())
+        if visivel.w > 0 and visivel.h > 0:
+            x0 = r.x + ((visivel.x - r.x) // 128) * 128
+            y0 = r.y + ((visivel.y - r.y) // 128) * 128
+            clip_antes = tela.get_clip()
+            tela.set_clip(visivel)
+            for yy in range(y0, visivel.bottom, 128):
+                for xx in range(x0, visivel.right, 128):
+                    tela.blit(lad, (xx, yy))
+            tela.set_clip(clip_antes)
+        if contorno > 0:
+            pygame.draw.rect(tela, cor_c, r, contorno)
+        return
     textura = superficie_material(w, h, cor, material)
     if material == "Neon":   # brilho em volta
         brilho = pygame.Surface((w + 16, h + 16), pygame.SRCALPHA)

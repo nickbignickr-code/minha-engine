@@ -198,6 +198,7 @@ class Editor(EditorBase, EditorObjetos, EditorEventos, EditorScript, EditorEntra
         self.fpp = fonte_ui(11)
         self.fb = fonte_ui(14, True)
         self.fg = fonte_ui(40, True)
+        self.ft = fonte_ui(21, True)       # títulos de janelas e cartões
         self.fc = fonte_codigo()
         self.cw = max(1, self.fc.size("M")[0])
         self.lh = self.fc.get_linesize() + 2
