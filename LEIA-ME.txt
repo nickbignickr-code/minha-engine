@@ -1,4 +1,4 @@
-MINHA ENGINE (versão 18, dividida em partes)
+MINHA ENGINE (versão 19, dividida em partes)
 ============================================
 
 COMO RODAR
@@ -141,3 +141,23 @@ NOVO NA VERSÃO 18: MAIS FLUIDA, MAIS BONITA E COM MAIS AJUDA
   - Barra de cima com ícones (Play, Salvar, Desfazer, Refazer, Snap, Grade, Buscar, Modo, Exportar, Ajuda).
   - Temas de cor: Grafite, Meia-noite, Carvão, Floresta e Vinho (Configurações > Aparência). Lá também dá
     para desligar o movimento suave, se o computador for fraco.
+
+NOVO NA VERSÃO 19: +263 COMPORTAMENTOS E +112 OBJETOS PRONTOS
+  - 125 comportamentos novos feitos à mão, em categorias: Movimento (círculo, oito, pêndulo, elevador,
+    teleporte, "cai quando passa embaixo"...), Visual (arco-íris, rastro, esticar ao pular, balançar...),
+    Câmera e tela (zoom perto, câmera lenta, seta para objetivo fora da tela...), Player (jetpack, planar,
+    correr com Shift, agachar, escalar, pulo carregado, nadar, escadas...), Inimigos e IA (patrulhar sem
+    cair, investida, tiro em leque/círculo, kamikaze, chefe que fica bravo, toupeira...), Física (esteira,
+    mola, vento, buraco negro, quicar, pegar e carregar com E...), Combate (escudo, dividir ao morrer,
+    soltar item, aura...), Itens (chave e porta trancada, bloco ?, pulo extra, +vida máxima...),
+    Mecanismos (alavanca, botão de pressão, porta automática, lava que sobe, laser, serra, portais em
+    par...), Interface, Som e Tempo.
+  - 138 REAÇÕES prontas no formato "QUANDO → FAZ", por exemplo "Ao tocar no player → dar moedas",
+    "Ao ser clicado → se destruir", "Quando o player chega perto → abrir diálogo",
+    "Ao ser destruído → somar na variável". Escolha em Comportamentos > "Reações (quando → faz)".
+  - 112 objetos novos na paleta da esquerda, em grupos novos (NATUREZA, INIMIGOS+, PLATAFORMAS,
+    ARMADILHAS, ITENS+, MECANISMOS, EFEITOS+, PERSONAGENS+, CENÁRIO, INTERFACE+). Eles começam
+    fechados: clique no nome do grupo para abrir. Também aparecem no Buscar (Ctrl+K).
+  - Editor mais rápido: os ícones da paleta ficam guardados (não são recriados a cada quadro), nomes
+    compridos são cortados com "…", e a lista de categorias do seletor rola com a rodinha.
+

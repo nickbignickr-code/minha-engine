@@ -93,6 +93,39 @@ foto("10_inicio", ini.desenhar)
 ini.pagina = "config"
 ini.config_aba = "aparencia"
 foto("11_config_aparencia", ini.desenhar)
+# ---- v19: paleta com os objetos novos, seletor com os comportamentos novos e um jogo com eles
+me.CONFIG["aparencia"]["tema"] = "Grafite"
+me.aplicar_aparencia()
+ed2.cats_fechadas.clear()
+ed2.scroll = 0
+foto("15_paleta_topo", ed2.desenhar)
+ed2.scroll = 45
+foto("16_paleta_novos", ed2.desenhar)
+ed2.scroll = 95
+foto("17_paleta_novos2", ed2.desenhar)
+ed2.abrir_seletor("Adicionar comportamento", "comp", me.COMPORTAMENTOS, me.CATEGORIAS_COMPORTAMENTOS,
+                  lambda n: None, (80, 200, 160))
+ed2.seletor["cat"] = "Reações (quando → faz)"
+foto("18_seletor_reacoes", ed2.desenhar)
+ed2.seletor["cat"] = "Player"
+ed2.seletor["scroll_cat"] = 300
+foto("19_seletor_player", ed2.desenhar)
+ed2.seletor = None
+pasta3 = me.criar_projeto("Novos", "Projeto vazio")
+me.definir_projeto(pasta3)
+ed3 = me.Editor(pasta_projeto=pasta3, tela=tela)
+x = 80
+for nome in ["Árvore", "Slime", "Serra", "Mola", "Bloco ?", "Chave", "Porta trancada", "Cristal", "Elevador",
+             "Placa", "Laser", "Moeda fujona", "Coração", "Chefe", "Canhão", "Portal A"]:
+    d = me.preset_objeto(nome)
+    d["x"], d["y"] = x, 520 - d["h"]
+    ed3.objetos.append(d)
+    x += 110
+ed3.objetos.append(dict(me.preset_objeto("Chão de pedra"), x=0, y=520, w=2000))
+foto("20_cena_objetos_novos", ed3.desenhar)
+ed3.play()
+foto("21_jogo_objetos_novos", lambda: (ed3.jogo.update(1 / 60, pg.key.get_pressed(), set()), ed3.desenhar()), 90)
+ed3.parar()
 print("ERROS:", len(erros))
 for nome, tb in erros:
     print("----", nome)

@@ -83,22 +83,36 @@ class EditorSeletor:
         t.blit(self.f.render(txt, True, C_TEXTO if s["busca"] else C_TEXTO2), (busca.x + 12, busca.y + 7))
         # categorias
         col = pygame.Rect(caixa.x + 12, busca.bottom + 12, 210, caixa.bottom - busca.bottom - 24)
-        y = col.y
+        s["col"] = col
+        alt_cats = len(s["cats"]) * 31
+        s["scroll_cat"] = max(0, min(s.get("scroll_cat", 0), max(0, alt_cats - col.h)))
+        y = col.y - suave(("seletor_cat", s["titulo"]), s["scroll_cat"])
+        t.set_clip(col)
         for nome, itens in s["cats"]:
-            r = pygame.Rect(col.x, y, col.w, 30)
+            if y + 28 < col.y:
+                y += 31
+                continue
+            r = pygame.Rect(col.x, y, col.w, 28)
             ativo = nome == s["cat"] and not s["busca"]
             if ativo:
                 pygame.draw.rect(t, s["cor"], r, border_radius=7)
             elif r.collidepoint(mouse):
                 pygame.draw.rect(t, (48, 52, 64), r, border_radius=7)
             rot = nome if len(nome) <= 24 else nome[:23] + "…"
-            t.blit(self.fp.render(rot, True, C_TEXTO), (r.x + 10, r.y + 7))
+            t.blit(self.fp.render(rot, True, C_TEXTO), (r.x + 10, r.y + 6))
             n = self.fpp.render(str(len(itens)), True, C_TEXTO2)
-            t.blit(n, (r.right - n.get_width() - 8, r.y + 8))
-            s["hits"].append((r, ("cat", nome)))
-            y += 33
-            if y > col.bottom - 30:
+            t.blit(n, (r.right - n.get_width() - 8, r.y + 7))
+            if col.collidepoint(r.center):
+                s["hits"].append((r.clip(col), ("cat", nome)))
+            y += 31
+            if y > col.bottom:
                 break
+        t.set_clip(None)
+        if alt_cats > col.h:      # tem mais categorias: mostra que dá para rolar
+            k_cat = s["scroll_cat"] / max(1, alt_cats - col.h)
+            alto = max(24, int(col.h * col.h / alt_cats))
+            pygame.draw.rect(t, s["cor"], (col.right - 3, col.y + int((col.h - alto) * k_cat), 3, alto),
+                             border_radius=2)
         # lista
         lista = pygame.Rect(col.right + 12, col.y, caixa.right - col.right - 32, col.h)
         pygame.draw.rect(t, (28, 30, 37), lista, border_radius=10)
@@ -192,4 +206,13 @@ class EditorSeletor:
             s["scroll"] = 0
 
     def roda_seletor(self, y):
-        self.seletor["scroll"] = max(0, self.seletor["scroll"] - y * self.SEL_LINHA)
+        s = self.seletor
+        col = s.get("col")
+        try:
+            sobre_col = col is not None and col.collidepoint(pygame.mouse.get_pos())
+        except (AttributeError, pygame.error):
+            sobre_col = False
+        if sobre_col:
+            s["scroll_cat"] = max(0, s.get("scroll_cat", 0) - y * 62)
+        else:
+            s["scroll"] = max(0, s["scroll"] - y * self.SEL_LINHA)

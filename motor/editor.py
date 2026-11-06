@@ -79,7 +79,7 @@ class Editor(EditorBase, EditorObjetos, EditorEventos, EditorScript, EditorEntra
         self.saida_erros_novos = 0
         self.saida_lidos_jogo = 0
         self.hits_saida = []
-        self.cats_fechadas = set()
+        self.cats_fechadas = set(GRUPOS_FECHADOS_PADRAO)
         self.minimapa_rect = None
         self.minimapa_conv = None
         self.sujo = False

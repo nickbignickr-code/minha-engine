@@ -139,6 +139,8 @@ PARTES_DA_ENGINE = [
     "logica_extra.py",
     "topdown.py",
     "jogo.py",
+    "comportamentos_mais.py",
+    "objetos_mais.py",
     "editor_dados.py",
     "editor_pixel.py",
     "loja.py",

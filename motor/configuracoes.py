@@ -40,7 +40,7 @@ ARQUIVO_AUTOSAVE = os.path.join(PASTA, "projeto_autosave.json")
 ARQUIVO_SAVEGAME = os.path.join(PASTA, "savegame.json")
 PASTA_PROJETOS = os.path.join(PASTA, "projetos")
 ARQUIVO_CONFIG = os.path.join(PASTA, "config.json")
-VERSAO = "18"
+VERSAO = "19"
 EXT_SONS = (".wav", ".ogg", ".mp3")
 EXT_IMAGENS = (".png", ".jpg", ".jpeg", ".bmp", ".gif", ".webp")
 

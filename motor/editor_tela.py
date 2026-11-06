@@ -489,13 +489,15 @@ class EditorTela:
                                                                   else C_BOTAO), r, border_radius=5)
                     icone = pygame.Rect(r.x + 5, r.y + 6, 14, 14)
                     if tipo.startswith("preset:"):
-                        d_ic = preset_objeto(tipo[7:])
+                        d_ic = ICONES_PRESET.get(tipo)
+                        if d_ic is None:
+                            d_ic = ICONES_PRESET[tipo] = preset_objeto(tipo[7:])
                         desenhar_icone(t, d_ic["tipo"], d_ic, icone)
                         rotulo = tipo[7:]
                     else:
                         desenhar_icone(t, tipo, dict(MODELOS[tipo], tipo=tipo), icone)
                         rotulo = NOMES_CURTOS.get(tipo, tipo)
-                    t.blit(self.fpp.render(rotulo, True, C_TEXTO), (r.x + 23, r.y + 6))
+                    t.blit(rotulo_curto(rotulo, self.fpp, r.w - 27), (r.x + 23, r.y + 6))
                     self.hits_esq.append((r, ("ferr", tipo)))
                 y += ((len(tipos) + 1) // 2) * 29 + 6
             for linha in quebrar_texto("Clique num tipo e depois na cena. Arraste para pintar vários. "
@@ -772,7 +774,12 @@ class EditorTela:
                     ligado = c.get("ativo") is not False
                     caixa = pygame.Rect(x0 + 8, y, PAINEL_DIR - 18, 26)
                     pygame.draw.rect(t, (44, 58, 60) if ligado else (48, 44, 46), caixa, border_radius=5)
-                    t.blit(self.fb.render(nome, True, C_TEXTO if ligado else C_TEXTO2), (caixa.x + 8, caixa.y + 5))
+                    nome_vis = nome
+                    while len(nome_vis) > 4 and self.fb.size(nome_vis)[0] > caixa.w - 92:
+                        nome_vis = nome_vis[:-2]
+                    if nome_vis != nome:
+                        nome_vis = nome_vis.rstrip() + "…"
+                    t.blit(self.fb.render(nome_vis, True, C_TEXTO if ligado else C_TEXTO2), (caixa.x + 8, caixa.y + 5))
                     rl = pygame.Rect(caixa.right - 72, caixa.y + 4, 46, 18)
                     pygame.draw.rect(t, C_VERDE if ligado else C_BOTAO, rl, border_radius=9)
                     img = self.fpp.render("ligado" if ligado else "off", True, C_TEXTO)
@@ -832,3 +839,19 @@ class EditorTela:
         t.blit(self.fp.render(txt, True, C_TEXTO), (10, ALTURA - RODAPE + 5))
         dica = self.fpp.render("F1 = todos os atalhos   ·   botão direito = mais opções", True, C_TEXTO2)
         t.blit(dica, (LARGURA - dica.get_width() - 10, ALTURA - RODAPE + 7))
+
+
+ICONES_PRESET = {}
+_ROTULOS_CURTOS = {}
+
+
+def rotulo_curto(txt, f, largura):
+    """Texto que cabe na largura (corta com '…'), guardado em cache."""
+    chave = (txt, id(f), largura, C_TEXTO)
+    img = _ROTULOS_CURTOS.get(chave)
+    if img is None:
+        corte = txt
+        while len(corte) > 1 and f.size(corte if corte == txt else corte + "…")[0] > largura:
+            corte = corte[:-1]
+        img = _ROTULOS_CURTOS[chave] = f.render(corte if corte == txt else corte.rstrip() + "…", True, C_TEXTO)
+    return img
