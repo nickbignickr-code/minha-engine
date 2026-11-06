@@ -1,0 +1,30 @@
+/tmp/tmp2w5br6_2/motor/auxiliares.py:465: Warning: pygame.init() has not been called. This function may return incorrect results
+  return pygame.key.key_code(nome)
+pygame 2.6.1 (SDL 2.28.4, Python 3.11.18)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+foto: 01_editor_cena
+foto: 02_editor_selecionado
+foto: 03_eventos
+foto: 04_loja
+foto: 05_buscar
+foto: 06_tour_passo2
+foto: 07_tour_buscar
+foto: 08_play
+foto: 09_tema_grafite
+foto: 09_tema_meia_noite
+foto: 09_tema_carvao
+foto: 09_tema_floresta
+foto: 09_tema_vinho
+foto: 12_topdown_vazio
+foto: 13_cena_vazia
+foto: 14_tour_propriedades
+foto: 10_inicio
+foto: 11_config_aparencia
+foto: 15_paleta_topo
+foto: 16_paleta_novos
+foto: 17_paleta_novos2
+foto: 18_seletor_reacoes
+foto: 19_seletor_player
+foto: 20_cena_objetos_novos
+foto: 21_jogo_objetos_novos
+ERROS: 0
